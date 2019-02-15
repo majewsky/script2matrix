@@ -1,0 +1,4 @@
+github.com/matrix-org/gomatrix v0.0.0-20190130130140-385f072fe9af h1:piaIBNQGIHnni27xRB7VKkEwoWCgAmeuYf8pxAyG0bI=
+github.com/matrix-org/gomatrix v0.0.0-20190130130140-385f072fe9af/go.mod h1:3fxX6gUjWyI/2Bt7J1OLhpCzOfO/bB3AiX0cJtEKud0=
+github.com/sapcc/go-bits v0.0.0-20190111093410-620b317f22bc h1:sIOSzr29YZS0LSl8Ocku6RCRNjxUgbdb6faHjDaA1Fs=
+github.com/sapcc/go-bits v0.0.0-20190111093410-620b317f22bc/go.mod h1:KeP5OOqQIgrauiDb/8shKWOq1YoplBALYNvpV4jizPo=
