@@ -29,30 +29,15 @@ import (
 )
 
 var userIDRx = regexp.MustCompile(`^@(.+):(.+)$`)
+var targetRx = regexp.MustCompile(`^#(.+):(.+)$`)
 
 func main() {
 	if len(os.Args) < 2 {
 		logg.Fatal("usage: %s <command> [<command-arg>...]", os.Args[0])
 	}
 
-	match := userIDRx.FindStringSubmatch(getenv("MATRIX_USER"))
-	if match == nil {
-		logg.Fatal("malformed environment variable: MATRIX_USER should look like @username:domain.name")
-	}
-
-	//login to Matrix account
-	client, err := gomatrix.NewClient("https://"+match[2], "", "")
-	failIf(err, "create Matrix client")
-	resp, err := client.Login(&gomatrix.ReqLogin{
-		Type:     "m.login.password",
-		User:     match[1],
-		Password: getenv("MATRIX_PASSWORD"),
-	})
-	failIf(err, "login to Matrix account")
-	client.SetCredentials(resp.UserID, resp.AccessToken)
-
-	//read remaining env vars now to detect presence
-	targetRoomID := getenv("MATRIX_TARGET")
+	client := getClient()
+	targetRoomID := getTargetRoomID(client)
 
 	//remove secrets from subcommand environment
 	var commandEnvironment []string
@@ -97,4 +82,36 @@ func failIf(err error, msg string) {
 	if err != nil {
 		logg.Fatal("%s: %s", msg, err.Error())
 	}
+}
+
+func getClient() *gomatrix.Client {
+	match := userIDRx.FindStringSubmatch(getenv("MATRIX_USER"))
+	if match == nil {
+		logg.Fatal("malformed environment variable: MATRIX_USER should look like @username:domain.name")
+	}
+
+	client, err := gomatrix.NewClient("https://"+match[2], "", "")
+	failIf(err, "create Matrix client")
+	resp, err := client.Login(&gomatrix.ReqLogin{
+		Type:     "m.login.password",
+		User:     match[1],
+		Password: getenv("MATRIX_PASSWORD"),
+	})
+	failIf(err, "login to Matrix account")
+	client.SetCredentials(resp.UserID, resp.AccessToken)
+
+	return client
+}
+
+func getTargetRoomID(client *gomatrix.Client) string {
+	target := getenv("MATRIX_TARGET")
+	if !targetRx.MatchString(target) {
+		logg.Fatal("malformed environment variable: MATRIX_TARGET should look like !roomalias:domain.name")
+	}
+
+	resp, err := ResolveRoomAlias(client, target)
+	if err != nil {
+		logg.Fatal("cannot resolve room alias into ID: " + err.Error())
+	}
+	return resp.RoomID
 }
