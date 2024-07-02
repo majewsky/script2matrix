@@ -30,6 +30,6 @@ type ResolveRoomAliasResponse struct {
 // #foo:example.org into a room ID like !bar:example.org.
 func ResolveRoomAlias(client *gomatrix.Client, roomAlias string) (resp *ResolveRoomAliasResponse, err error) {
 	urlPath := client.BuildURL("directory", "room", roomAlias)
-	_, err = client.MakeRequest("GET", urlPath, nil, &resp)
+	err = client.MakeRequest("GET", urlPath, nil, &resp)
 	return
 }
