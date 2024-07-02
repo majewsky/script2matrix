@@ -20,14 +20,14 @@ package main
 
 import "github.com/matrix-org/gomatrix"
 
-//ResolveRoomAliasResponse is returned by ResolveRoomAlias.
+// ResolveRoomAliasResponse is returned by ResolveRoomAlias.
 type ResolveRoomAliasResponse struct {
 	RoomID  string   `json:"room_id"`
 	Servers []string `json:"servers"`
 }
 
-//ResolveRoomAlias asks the server to resolve a room alias like
-//#foo:example.org into a room ID like !bar:example.org.
+// ResolveRoomAlias asks the server to resolve a room alias like
+// #foo:example.org into a room ID like !bar:example.org.
 func ResolveRoomAlias(client *gomatrix.Client, roomAlias string) (resp *ResolveRoomAliasResponse, err error) {
 	urlPath := client.BuildURL("directory", "room", roomAlias)
 	_, err = client.MakeRequest("GET", urlPath, nil, &resp)

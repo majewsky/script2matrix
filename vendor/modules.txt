@@ -1,4 +1,6 @@
 # github.com/matrix-org/gomatrix v0.0.0-20190130130140-385f072fe9af
+## explicit
 github.com/matrix-org/gomatrix
 # github.com/sapcc/go-bits v0.0.0-20190111093410-620b317f22bc
+## explicit
 github.com/sapcc/go-bits/logg
